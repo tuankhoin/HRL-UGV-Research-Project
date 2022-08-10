@@ -12,7 +12,7 @@ The decision layer currently can demonstrate a certain level of intelligence by 
 
 Aside from these three layers, a simulator based on the Gazebo is included to provide a virtual platform for testing purpose. It is expected to be replaced by the Unity engine in the next step.
 
-# Introduction:
+# Instruction:
 ## 1. ROS Installation
 This project has been tested on both ROS Melodic (with Ubuntu 18.04) and ROS Noetic (with Ubuntu 20.04). The main development is based on ROS Noetic and Ubuntu 20.04.
 ROS installation instructions can be found via ROS website. Download [Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu) or [Noetic](http://wiki.ros.org/noetic/Installation/Ubuntu) based on the Ubuntu version. The *desktop-full* version is recommended for this project.
