@@ -6,7 +6,7 @@ Read feedback from the low-level controller and publish to corresponding ROS top
 
 To use: Include the following line in your launch file:
 
- $ <node name="my_serial_node" pkg="my_serial_node" type="my_serial_node" />
+    $ <node name="my_serial_node" pkg="my_serial_node" type="my_serial_node" />
 
 Details to be added.
 
