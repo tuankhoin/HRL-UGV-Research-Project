@@ -1,9 +1,8 @@
 /*********************************
- * Communication Node:
- * Used with the ACCR robot 
- * Protocol version: 0.1.1 (Feb, 2022)
- * Subscribe ROS topics and send to low-level controller
- * Receive data from low-level controller and publish to ros topics
+ * ACCR_Comm: Serial Communication Node for ACCR UGTV
+ * Dependencies: Serial_main
+ * Protocol version: 0.1 (Aug, 2022)
+ * More details can be found in README.md file in this package
  * *******************************/
  
 #include <ros/ros.h>
@@ -17,18 +16,31 @@
 #include <tf/transform_broadcaster.h>
 #include <math.h>
 
-#define	S_CHASSIS_BUFFERSIZE	8//send buffer size
-#define S_UTIL_BUFFERSIZE 		8
-#define S_BUCKET_BUFFERSIZE 	8
+// Buffer size
+#define	BUFFERSIZE 8
 
-#define	R_CHASSIS_BUFFERSIZE	24//receive buffer size
-#define	R_UTIL_BUFFERSIZE		24
-#define	R_BUCKET_BUFFERSIZE		24
-#define R_BUFFERSIZE 			24
+// Send/Receive Header
+#define S_HEADER 0xAA
+#define R_HEADER 0x55
 
-#define CHASSIS_HEADER 0x10
-#define BUCKET_HEADER 0x20
-#define UTIL_HEADER 0x11
+// Setup Header
+#define SHAKE_HEADER 0x00
+#define INIT_HEADER 0x01
+
+// Chassis Header
+#define CHASSIS_VEL_HEADER 0x10
+#define CHASSIS_POS_HEADER 0x11
+#define CHASSIS_ORI_HEADER 0x12
+#define CHASSIS_TAU_HEADER 0x13
+
+// Bucket Header
+#define BUCKET_MODE_HEADER 0x20
+#define BUCKET_DYN_HEADER 0x21
+
+// Utility Header
+#define UTIL_MODE_HEADER 0x30
+
+/* STOP HERE */
 
 unsigned char s_chassis_buffer[S_CHASSIS_BUFFERSIZE];//send chassis buffer 
 unsigned char s_util_buffer[S_UTIL_BUFFERSIZE];//send utility buffer 

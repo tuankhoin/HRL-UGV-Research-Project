@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
-project( my_serial_node )
+project(accr_comm)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_module)
+set(CMAKE_BUILD_TYPE Release)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -7,23 +9,23 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   tf
   nav_msgs
-  decision
+  accr_msgs
 )
 
 catkin_package(
   CATKIN_DEPENDS
     serial
     std_msgs
-    decision
+    accr_msgs
 )
 
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable( my_serial_node src/my_serial_node.cpp)
+add_executable( ACCR_Comm src/ACCR_Comm.cpp)
 
-target_link_libraries( my_serial_node
+target_link_libraries( ACCR_Comm
   ${catkin_LIBRARIES}
 )
 
