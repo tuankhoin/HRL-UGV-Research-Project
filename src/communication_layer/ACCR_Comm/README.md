@@ -129,7 +129,7 @@ For more details about these parameters, please see [below](https://github.com/M
 # Sending Command Protocol
 A sending command header, 0xAA, is added to each of the messages. The detailed protocols are shown below.
 
-## Chassis Command
+## Chassis velocity command
 Given this vehicle has a differencial-drive mechanism, two main commands which are the linear velocity in x axis ($v_x$) and angular velocity in z axis ($\omega_z$) are sent to the chassis from the computing device. The positive direction of the x-, y-, and z-axis are defined as the frontward, leftward, and upward of the robot body, respectively. For more details, please check the ACCR UTGV documentation. The sub-header of chassis command is 0x10, and the information bytes are shown in the table below.
 <table>
   <tr>
@@ -153,14 +153,14 @@ Given this vehicle has a differencial-drive mechanism, two main commands which a
   </tr>
   <tr>
     <td align="center">Sending header</td>
-    <td align="center">Chassis command header</td>
+    <td align="center">Chassis velocity header</td>
     <td align="center" colspan="2">Linear velocity</td>
     <td align="center" colspan="2">Angular velocity</td>
     <td align="center" colspan="4">N/D</td>
   </tr>
 </table>
 
-## Bucket Command
+## Bucket state command
 The bucket consists of two main linkages actuated by !!! linear actuators, and the extension of the actuator can be controlled individually. The sub-header of chassis command is 0x20, and the information bytes are shown in the table below.
 <table>
   <tr>
@@ -185,7 +185,7 @@ The bucket consists of two main linkages actuated by !!! linear actuators, and t
   </tr>
   <tr>
     <td align="center">Sending header</td>
-    <td align="center">Bucket command header</td>
+    <td align="center">Bucket state header</td>
     <td align="center">bucket mode</td>
     <td align="center" colspan="2">primary linkage extension !!! change name</td>
     <td align="center" colspan="2">secondary linkage extension !!! change name</td>
@@ -229,7 +229,7 @@ Bucket mode can be set as the following modes.
 
 Based on the table above, ext1 and ext2 will only be read when the mode is set to 0x00 (Free mode). The saturation of the extension of each linkage is $ext1_{max} = !!!$ and $ext2_{max} = !!!$.
 
-## Utilities Command
+## Utilities state command
 The sub-header of utilities command is 0x30, and the protocol is listed below. Each of the swiches can be set as 0x00 for False/Close/Turn-off or 0x01 for True/Open/Turn-on. (!!! Is the horn a state swicth or a push button switch???)
 <table>
   <tr>
@@ -247,20 +247,249 @@ The sub-header of utilities command is 0x30, and the protocol is listed below. E
   <tr>
     <td align="center">0xAA</td>
     <td align="center">0x30</td>
-    <td align="center">horn</td>
-    <td align="center">headlight</td>
+    <td align="center">$s_{horn}$</td>
+    <td align="center">$s_{led}$</td>
     <td align="center" colspan="6">N/D</td>
   </tr>
   <tr>
     <td align="center">Sending header</td>
-    <td align="center">Utilities command header</td>
+    <td align="center">Utilities state header</td>
     <td align="center">horn switch</td>
     <td align="center">headlight switch</td>
     <td align="center" colspan="6">N/D</td>
   </tr>
 </table>
 
+# Receiving Feedback Protocol
+A receiving feedback header, 0x55, is added to each of the messages. The detailed protocols are shown below.
 
+## Chassis velocity feedback
+This is the velocity feedback from the robot platform, and the protocol is same as sending command except for the header.
+<table>
+  <tr>
+    <th>0</th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>8</th>
+    <th>9</th>
+  </tr>
+  <tr>
+    <td align="center">0x55</td>
+    <td align="center">0x10</td>
+    <td align="center" colspan="2">$v_x$</td>
+    <td align="center" colspan="2">$\omega_z$</td>
+    <td align="center" colspan="4">N/D</td>
+  </tr>
+  <tr>
+    <td align="center">Sending header</td>
+    <td align="center">Chassis velocity header</td>
+    <td align="center" colspan="2">Linear velocity</td>
+    <td align="center" colspan="2">Angular velocity</td>
+    <td align="center" colspan="4">N/D</td>
+  </tr>
+</table>
+
+## Chassis position feedback
+This is the position feedback (in odometry) from the robot platform, the information in this feedback is the x, y positions respect to the odom frame that has a static transformation to the ground frame. The origin, the x direction, and y direction  of the odom frame are defined when the robot is turned on or reseted, and the origin is the current robot position, and the x and y directions are the frontward and leftward of the robot at the current state. The protocol is shown below.
+<table>
+  <tr>
+    <th>0</th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>8</th>
+    <th>9</th>
+  </tr>
+  <tr>
+    <td align="center">0x55</td>
+    <td align="center">0x11</td>
+    <td align="center" colspan="4">$x$</td>
+    <td align="center" colspan="4">$y$</td>
+  </tr>
+  <tr>
+    <td align="center">Sending header</td>
+    <td align="center">Chassis position header</td>
+    <td align="center" colspan="4">$x$ coordinate in the odom frame</td>
+    <td align="center" colspan="4">$y$ coordinate in the odom frame</td>
+  </tr>
+</table>
+
+## Chassis orientation feedback
+This is the orientation feedback (in odometry) from the robot platform, the information in this feedback is the oreientation respect to the z-axis of the odom frame. The protocol is shown below.
+<table>
+  <tr>
+    <th>0</th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>8</th>
+    <th>9</th>
+  </tr>
+  <tr>
+    <td align="center">0x55</td>
+    <td align="center">0x11</td>
+    <td align="center" colspan="4">$\theta$</td>
+    <td align="center" colspan="4">N/D</td>
+  </tr>
+  <tr>
+    <td align="center">Sending header</td>
+    <td align="center">Chassis orientation header</td>
+    <td align="center" colspan="4">yaw angle in the odom frame</td>
+    <td align="center" colspan="4">N/D</td>
+  </tr>
+</table>
+
+## Chassis torque feedback
+This is the torque feedback from the robot platform, the information in this feedback is the torque measured on the left and right wheels. The protocol is shown below.
+<table>
+  <tr>
+    <th>0</th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>8</th>
+    <th>9</th>
+  </tr>
+  <tr>
+    <td align="center">0x55</td>
+    <td align="center">0x11</td>
+    <td align="center" colspan="2">$\tau_l$</td>
+    <td align="center" colspan="2">$\tau_r$</td>
+    <td align="center" colspan="4">N/D</td>
+  </tr>
+  <tr>
+    <td align="center">Sending header</td>
+    <td align="center">Chassis torque header</td>
+    <td align="center" colspan="2">torque on the left wheel</td>
+    <td align="center" colspan="2">torque on the right wheel</td>
+    <td align="center" colspan="4">N/D</td>
+  </tr>
+</table>
+
+## Bucket state feedback
+This is the bucket state feedback from the robot platform, the first five information byte has the same protocol as the [bucket state command]((https://github.com/Murphy41/HRL-UGV-Research-Project/edit/main/src/communication_layer/ACCR_Comm/README.md#bucket-state-command)) including the feedback on the bucket mode and linkage extensions. And the latter two bytes are for measured load in the bucket. The protocol is shown below.
+<table>
+  <tr>
+    <th>0</th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>8</th>
+    <th>9</th>
+  </tr>
+  <tr>
+    <td align="center">0x55</td>
+    <td align="center">0x20</td>
+    <td align="center">mode</td>
+    <td align="center" colspan="2">ext1</td>
+    <td align="center" colspan="2">ext2</td>
+    <td align="center" colspan="2">load</td>
+    <td align="center">N/D</td>
+  </tr>
+  <tr>
+    <td align="center">Receiving header</td>
+    <td align="center">Bucket state header</td>
+    <td align="center">bucket mode</td>
+    <td align="center" colspan="2">primary linkage extension !!! change name</td>
+    <td align="center" colspan="2">secondary linkage extension !!! change name</td>
+    <td align="center" colspan="2">current load in the bucket</td>
+    <td align="center">N/D</td>
+  </tr>
+</table>
+
+
+## Bucket dynamics feedback
+This feedback contains the force measured from the actuators. The protocol is shown below.
+<table>
+  <tr>
+    <th>0</th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>8</th>
+    <th>9</th>
+  </tr>
+  <tr>
+    <td align="center">0x55</td>
+    <td align="center">0x21</td>
+    <td align="center" colspan="2">$F_1$</td>
+    <td align="center" colspan="2">$F_2$</td>
+    <td align="center" colspan="4">N/D</td>
+  </tr>
+  <tr>
+    <td align="center">Receiving header</td>
+    <td align="center">Bucket dynamics header</td>
+    <td align="center" colspan="2">force on the primary linkage</td>
+    <td align="center" colspan="2">force on the secondary linkage</td>
+    <td align="center" colspan="4">N/D</td>
+  </tr>
+</table>
+
+## Utility state feedback
+This feedback contains the utility state from the robotic platform. Except for the remote state and batery state, all other states are False/Close/Turn-off when receive 0x00 or True/Open/Turn-on when receive 0x01. (!!! Is the horn a state swicth or a push button switch???) The protocol is shown below.
+<table>
+  <tr>
+    <th>0</th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>8</th>
+    <th>9</th>
+  </tr>
+  <tr>
+    <td align="center">0x55</td>
+    <td align="center">0x30</td>
+    <td align="center">$s_{horn}$</td>
+    <td align="center">$s_{headlight}$</td>
+    <td align="center">$s_{emgergency}$</td>
+    <td align="center">$s_{remote}$</td>
+    <td align="center">$battery level$</td>
+    <td align="center" colspan="3">N/D</td>
+  </tr>
+  <tr>
+    <td align="center">Receiving header</td>
+    <td align="center">Utility state header</td>
+    <td align="center">horn switch</td>
+    <td align="center">headlight switch</td>
+    <td align="center">emergency state</td>
+    <td align="center">remote state</td>
+    <td align="center">battery level in percentage</td>
+    <td align="center" colspan="3">N/D</td>
+  </tr>
+</table>
+- horn switch: the mode can be changed by sending [command]().
+- headlight switch: the mode can be changed by sending [command]().
+- emergency state: this is a physical button on the robot body, and cannot be triggered by the command.
+- remote state: can be triggered by using the remote controller, but cannot be triggered by the command. In this state: 0x00 for manual mode (none of the command will be run by the robot), 0x01 for auto mode (the robot is fully controlled by the computing device).
 
 
 
