@@ -9,11 +9,11 @@ Connect the UART pins on the low-level controller to the USB port of the onboard
 - stop bit: 1
 - checksum: none
 
-# Protocol
-The communication protocol is defined as below.
+# 3-step Hand-shake Protocol
+The 3-step hand-shake protocol requires three dedicated messages are sent through the cable. The steps are defined as shown below.
 
-## Handshake (3 steps)
-- Step 1 - Send the hand-shake message to the robot:
+## Step 1:
+Send the hand-shake message to the robot:
 
 <table>
 
@@ -49,7 +49,8 @@ The communication protocol is defined as below.
 </table>
 </p>
 
-- Step 2 - Receive the hand-shake feedback from the robot:
+## Step 2:
+Receive the hand-shake feedback from the robot:
 
 <table>
   <tr>
@@ -83,7 +84,8 @@ The communication protocol is defined as below.
   </tr>
 </table>
 
-- Step 3 - Send initialization command to the robot:
+## Step 3:
+Send initialization command to the robot:
 
 <table>
   <tr>
@@ -123,6 +125,143 @@ The communication protocol is defined as below.
 </table>
 
 For more details about these parameters, please see [below](https://github.com/Murphy41/HRL-UGV-Research-Project/edit/main/src/communication_layer/ACCR_Comm/README.md#initialization-parameters).
+
+# Sending Command Protocol
+A sending command header, 0xAA, is added to each of the messages. The detailed protocols are shown below.
+
+## Chassis Command
+Given this vehicle has a differencial-drive mechanism, two main commands which are the linear velocity in x axis ($v_x$) and angular velocity in z axis ($\omega_z$) are sent to the chassis from the computing device. The positive direction of the x-, y-, and z-axis are defined as the frontward, leftward, and upward of the robot body, respectively. For more details, please check the ACCR UTGV documentation. The sub-header of chassis command is 0x10, and the information bytes are shown in the table below.
+<table>
+  <tr>
+    <th>0</th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>8</th>
+    <th>9</th>
+  </tr>
+  <tr>
+    <td align="center">0xAA</td>
+    <td align="center">0x10</td>
+    <td align="center" colspan="2">$v_x$</td>
+    <td align="center" colspan="2">$\omega_z$</td>
+    <td align="center" colspan="4">N/D</td>
+  </tr>
+  <tr>
+    <td align="center">Sending header</td>
+    <td align="center">Chassis command header</td>
+    <td align="center" colspan="2">Linear velocity</td>
+    <td align="center" colspan="2">Angular velocity</td>
+    <td align="center" colspan="4">N/D</td>
+  </tr>
+</table>
+
+## Bucket Command
+The bucket consists of two main linkages actuated by !!! linear actuators, and the extension of the actuator can be controlled individually. The sub-header of chassis command is 0x20, and the information bytes are shown in the table below.
+<table>
+  <tr>
+    <th>0</th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>8</th>
+    <th>9</th>
+  </tr>
+  <tr>
+    <td align="center">0xAA</td>
+    <td align="center">0x20</td>
+    <td align="center">mode</td>
+    <td align="center" colspan="2">ext1</td>
+    <td align="center" colspan="2">ext2</td>
+    <td align="center" colspan="3">N/D</td>
+  </tr>
+  <tr>
+    <td align="center">Sending header</td>
+    <td align="center">Bucket command header</td>
+    <td align="center">bucket mode</td>
+    <td align="center" colspan="2">primary linkage extension !!! change name</td>
+    <td align="center" colspan="2">secondary linkage extension !!! change name</td>
+    <td align="center" colspan="3">N/D</td>
+  </tr>
+</table>
+
+Bucket mode can be set as the following modes.
+<table>
+  <tr>
+    <th>Byte</th>
+    <th>Mode</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td align="center">0x00</td>
+    <td align="center">Free mode</td>
+    <td align="center">The bucket will be actuated based on the commanded linkage extension.</td>
+  </tr>
+  <tr>
+    <td align="center">0x01</td>
+    <td align="center">Clean mode</td>
+    <td align="center">The bucket will down to the ground. This mode is predefined in the robot low-level controller. Thus, ext1/ext2 will be ignored.</td>
+  </tr>
+  <tr>
+    <td align="center">0x02</td>
+    <td align="center">Carry mode</td>
+    <td align="center">The bucket will !!!. This mode is predefined in the robot low-level controller. Thus, ext1/ext2 will be ignored.</td>
+  </tr>
+  <tr>
+    <td align="center">0x03</td>
+    <td align="center">Lift mode</td>
+    <td align="center">The bucket will !!!. This mode is predefined in the robot low-level controller. Thus, ext1/ext2 will be ignored.</td>
+  </tr>
+  <tr>
+    <td align="center">0x04</td>
+    <td align="center">dump mode</td>
+    <td align="center">The bucket will !!!. This mode is predefined in the robot low-level controller. Thus, ext1/ext2 will be ignored.</td>
+  </tr>
+</table>
+
+Based on the table above, ext1 and ext2 will only be read when the mode is set to 0x00 (Free mode). The saturation of the extension of each linkage is $ext1_{max} = !!!$ and $ext2_{max} = !!!$.
+
+## Utilities Command
+The sub-header of utilities command is 0x30, and the protocol is listed below. Each of the swiches can be set as 0x00 for False/Close/Turn-off or 0x01 for True/Open/Turn-on. (!!! Is the horn a state swicth or a push button switch???)
+<table>
+  <tr>
+    <th>0</th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>8</th>
+    <th>9</th>
+  </tr>
+  <tr>
+    <td align="center">0xAA</td>
+    <td align="center">0x30</td>
+    <td align="center">horn</td>
+    <td align="center">headlight</td>
+    <td align="center" colspan="6">N/D</td>
+  </tr>
+  <tr>
+    <td align="center">Sending header</td>
+    <td align="center">Utilities command header</td>
+    <td align="center">horn switch</td>
+    <td align="center">headlight switch</td>
+    <td align="center" colspan="6">N/D</td>
+  </tr>
+</table>
+
+
+
 
 
 
@@ -310,10 +449,12 @@ Lookup table for bucket feedback list:
 ### Utility feedback switch
 Utility feedback switch (s<sub>utl</sub>) is a byte switch to decide whether the utility feedback is required or not. When s<sub>utl</sub> = 0x00 means it is not required and won't be sent, while 0x01 means it will be sent.
 
+### Reset switch
+Reset switch (s<sub>rst</sub>) is a byte switch to decide whether the robot is going to be reset in this initialization. When s<sub>rst</sub> = 0x00 means it will not be reset, while 0x01 means it will be reset.
 
 
-
-
+# TODO:
+- update the link of ACCR UTGV documentation.
 
 To use: Include the following line in your launch file:
   <node name="my_serial_node" pkg="my_serial_node" type="my_serial_node" />
