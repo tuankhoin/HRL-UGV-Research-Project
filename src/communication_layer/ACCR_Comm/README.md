@@ -45,18 +45,72 @@ The communication protocol is defined as below.
 
 - Step 2 - Receive the hand-shake feedback from the robot:
 
-|  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-|0x55 |0x00 |  0  |  0  |  0  |  0  |  0  |  0  |  0  |  0  |
+<table>
+  <tr>
+    <th>0</th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>8</th>
+    <th>9</th>
+  </tr>
+  <tr>
+    <td>0x55</td>
+    <td>0x01</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  </tr>
+</table>
 
 - Step 3 - Send initialization command to the robot:
 
-|  0  |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-|0xAA |0x01 |  Th  |  Tl  |  p1  |  p2  |  p3 |  p4  |  0  |  reset  |
-|Sending header |Initializatin header | Communication frequency  |  cont.  |  Pre-scalar<sup>1</sup>  | Chassis feedback options | Bucket feedback options | Other options |  N.A.  |  Reset option |
-
-
+<table>
+  <tr>
+    <th>0</th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>8</th>
+    <th>9</th>
+  </tr>
+  <tr>
+    <td>0xAA</td>
+    <td>0x01</td>
+    <td>Th</td>
+    <td>Tl</td>
+    <td>p1</td>
+    <td>p2</td>
+    <td>p3</td>
+    <td>p4</td>
+    <td>0</td>
+    <td>reset</td>
+  </tr>
+  <tr>
+    <td>Sending header</td>
+    <td>Initializatin header</td>
+    <td colspan="2">Communication frequency<sup>*1</sup></td>
+    <td>Pre-scalar<sup>*2</sup></td>
+    <td>Chassis feedback options<sup>*3</sup></td>
+    <td>Bucket feedback options<sup>*4</sup></td>
+    <td>Other options<sup>*5</sup></td>
+    <td>N.A.</td>
+    <td>Reset options<sup>*6</sup></td>
+  </tr>
+</table>
 
 [^1]: The frequency differences between chassis info and other info in times.
 
