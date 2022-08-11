@@ -24,6 +24,7 @@ add_message_files(
     FILES
     Chassis.msg
     Bucket.msg
+    Utility.msg
     API.msg
 )
 
