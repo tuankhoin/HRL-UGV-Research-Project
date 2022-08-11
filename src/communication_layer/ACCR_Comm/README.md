@@ -308,60 +308,8 @@ Lookup table for bucket feedback list:
 </table>
 
 ### Utility feedback switch
-Utility feedback switch (s<sub>utl</sub>) is a bit switch for utility feedbacks. The first seven bits from the MSB is not available (N.A.) in the current protocol, and only the LSB corresponds to the utility state feedback as shown in the table below. At each bit, 0 means the correspoding feedback is not required and won't be sent. In contrast, 1 means the corresponding feedback will be sent.
-<table>
-  <tr>
-    <th>Bit</th>
-    <th>MSB</th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    <th>4</th>
-    <th>5</th>
-    <th>6</th>
-    <th>LSB</th>
-  </tr>
-  <tr>
-    <td align="center">Bucket feedback</td>
-    <td align="center">N.A.</td>
-    <td align="center">N.A.</td>
-    <td align="center">N.A.</td>
-    <td align="center">N.A.</td>
-    <td align="center">N.A.</td>
-    <td align="center">N.A.</td>
-    <td align="center">N.A.</td>
-    <td align="center">switch</td>
-  </tr>
-</table>
+Utility feedback switch (s<sub>utl</sub>) is a byte switch to decide whether the utility feedback is required or not. When s<sub>utl</sub> = 0x00 means it is not required and won't be sent, while 0x01 means it will be sent.
 
-Lookup table for bucket feedback list:
-<table>
-  <tr>
-    <th>Bit</th>
-    <th>Hex</th>
-    <th>Bucket feedback</th>
-  </tr>
-  <tr>
-    <td align="center">00</td>
-    <td align="center">0x00</td>
-    <td align="center">No feedback</td>
-  </tr>
-  <tr>
-    <td align="center">01</td>
-    <td align="center">0x01</td>
-    <td align="center">mode</td>
-  </tr>
-  <tr>
-    <td align="center">10</td>
-    <td align="center">0x02</td>
-    <td align="center">dynamics</td>
-  </tr>
-  <tr>
-    <td align="center">11</td>
-    <td align="center">0x03</td>
-    <td align="center">mode+dynamics</td>
-  </tr>
-</table>
 
 
 
