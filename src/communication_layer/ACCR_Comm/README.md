@@ -677,23 +677,18 @@ This feedback contains the utility state from the robotic platform. Except for t
 - battery level: feedback the remaining battery level in percentage.
 
 # Dependencies:
-Please check [CMakeLists file](https://github.com/Murphy41/HRL-UGV-Research-Project/blob/main/src/communication_layer/ACCR_Comm/CMakeLists.txt)
+Please check [CMakeLists file](https://github.com/Murphy41/HRL-UGV-Research-Project/blob/main/src/communication_layer/accr_comm/CMakeLists.txt)
 
 # How to use:
 This package is currently an excutable file. You can include the following line in your launch file to turn on the communication.
 
 ```xml
-  <node name="my_serial_node" pkg="my_serial_node" type="my_serial_node" />
-```
-
-# TODO:
-- update the link of ACCR UTGV documentation.
-
-To use: Include the following line in your launch file:
   <node name="accr_comm" pkg="accr_comm" type="accr_comm" />
-
-
-Details to be added.
+```
 
 ## Acknoledgement
 This node relys on the Serial Communication Library developed by William Woodall, John Harrison and other contributors. For more details, please refer to their [GitHub page](https://github.com/wjwwood/serial)
+
+
+# TODO:
+- update the link of ACCR UTGV documentation.
