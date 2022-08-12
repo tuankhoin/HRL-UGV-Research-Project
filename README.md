@@ -55,13 +55,13 @@ Several different launch files will be provided after finish testing.
 At this beginning level, we still have a lot of works that need to be done. Here are some short-term goals:
 
 * Communication layer:
-  * Update the newest version of ACCR-UTGV protocol (Aug_2022 Version, currently under testing).
-  * Add support for DJI AI robot.
+  * Update the ACCR-UTGV protocol (currently under testing).
+  * Add support for DJI AI robot. :heavy_check_mark:
   * Add MQTT protocol to allow data communication between agents or a monitor device.
   
 * Function layer:
   * Add computer vision function.
-  * Add navigation function.
+  * Add navigation function. 
   * Add Livox 3D LiDAR support.
   * Add RPLiDAR support.
   
