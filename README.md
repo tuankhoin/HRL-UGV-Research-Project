@@ -36,6 +36,7 @@ If you want to **remove** this global setting from your device, simply go to `Ho
 Install necessary dependency packages:
 
     $ sudo apt clean && sudo apt update
+    $ sudo apt install libgoogle-glog-dev 
     $ source /opt/ros/$ROS_DISTRO/setup.bash
     $ sudo apt-get install -y ros-$ROS_DISTRO-gmapping ros-$ROS_DISTRO-navigation ros-$ROS_DISTRO-tf2-sensor-msgs ros-$ROS_DISTRO-teleop-twist-keyboard ros-$ROS_DISTRO-teb-local-planner ros-$ROS_DISTRO-realsense2-camera
     $ sudo apt-get update && sudo apt-get upgrade    
