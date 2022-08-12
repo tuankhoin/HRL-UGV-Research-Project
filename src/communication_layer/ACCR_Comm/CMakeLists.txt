@@ -23,9 +23,9 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable( ACCR_Comm src/ACCR_Comm.cpp)
+add_executable( accr_comm src/accr_comm.cpp)
 
-target_link_libraries( ACCR_Comm
+target_link_libraries( accr_comm
   ${catkin_LIBRARIES}
 )
 
