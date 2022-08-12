@@ -114,7 +114,7 @@ Send initialization command to the robot:
   <tr>
     <td align="center">Sending header</td>
     <td align="center">Initialization header</td>
-    <td align="center" colspan="2"><a href="https://github.com/Murphy41/HRL-UGV-Research-Project/edit/main/src/communication_layer/ACCR_Comm/README.md#communication-cycle">Communication cycle</a></td>
+    <td align="center" colspan="2"><a href="https://github.com/Murphy41/HRL-UGV-Research-Project/tree/main/src/communication_layer/accr_utgv/ACCR_Comm#communication-cycle">Communication cycle</a></td>
     <td align="center"><a href="https://github.com/Murphy41/HRL-UGV-Research-Project/edit/main/src/communication_layer/ACCR_Comm/README.md#frequency-division">Frequency division</a></td>
     <td align="center"><a href="https://github.com/Murphy41/HRL-UGV-Research-Project/edit/main/src/communication_layer/ACCR_Comm/README.md#chassis-feedback-switch">Chassis feedback switch</a></td>
     <td align="center"><a href="https://github.com/Murphy41/HRL-UGV-Research-Project/edit/main/src/communication_layer/ACCR_Comm/README.md#bucket-feedback-switch">Bucket feedback switch</a></td>
