@@ -124,7 +124,191 @@ Send initialization command to the robot:
   </tr>
 </table>
 
-For more details about these parameters, please see [below](https://github.com/Murphy41/HRL-UGV-Research-Project/edit/main/src/communication_layer/ACCR_Comm/README.md#initialization-parameters).
+### Communication cycle
+Communication cycle (T) is the time cycle of each round of communication in ms.
+
+### Frequency division
+Frequency division, $k_f$ is the frequency division of the chassis info and other info. The chassis info communication frequency $f_{chas}$ is defined as $f_{chas} = \frac{1}{T}$. And the frequency of all other communications (currently including bucket and utilities) $f_{n-chas} = \frac{f_{chas}}{k_f}$.
+
+### Chassis feedback switch
+Chassis feedback switch (s<sub>chas</sub>) is a bit switch for chassis feedbacks. The first four bits from the MSB is not available (N.A.) in the current protocol, and the last four bits from the LSB corresponds to the chassis velocity feedback, chassis position feedback, chassis orientation feedback, and chassis torque feedback, as shown in the table below. At each bit, 0 means the correspoding feedback is not required and won't be sent. In contrast, 1 means the corresponding feedback will be sent.
+<table>
+  <tr>
+    <th>Bit</th>
+    <th>MSB</th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>LSB</th>
+  </tr>
+  <tr>
+    <td align="center">Chassis feedback</td>
+    <td align="center">N.A.</td>
+    <td align="center">N.A.</td>
+    <td align="center">N.A.</td>
+    <td align="center">N.A.</td>
+    <td align="center">torque</td>
+    <td align="center">orientation</td>
+    <td align="center">position</td>
+    <td align="center">velocity</td>
+  </tr>
+</table>
+
+Lookup table for chassis feedback list:
+<table>
+  <tr>
+    <th>Bit</th>
+    <th>Hex</th>
+    <th>Chassis feedback</th>
+  </tr>
+  <tr>
+    <td align="center">0000</td>
+    <td align="center">0x00</td>
+    <td align="center">No feedback</td>
+  </tr>
+  <tr>
+    <td align="center">0001</td>
+    <td align="center">0x01</td>
+    <td align="center">velocity</td>
+  </tr>
+  <tr>
+    <td align="center">0010</td>
+    <td align="center">0x02</td>
+    <td align="center">position</td>
+  </tr>
+  <tr>
+    <td align="center">0011</td>
+    <td align="center">0x03</td>
+    <td align="center">velocity+position</td>
+  </tr>
+  <tr>
+    <td align="center">0100</td>
+    <td align="center">0x04</td>
+    <td align="center">orientation</td>
+  </tr>
+  <tr>
+    <td align="center">0101</td>
+    <td align="center">0x05</td>
+    <td align="center">velocity+orientation</td>
+  </tr>
+  <tr>
+    <td align="center">0110</td>
+    <td align="center">0x06</td>
+    <td align="center">position+orientation</td>
+  </tr>
+  <tr>
+    <td align="center">0111</td>
+    <td align="center">0x07</td>
+    <td align="center">velocity+position+orientation</td>
+  </tr>
+  <tr>
+    <td align="center">1000</td>
+    <td align="center">0x08</td>
+    <td align="center">torque</td>
+  </tr>
+  <tr>
+    <td align="center">1001</td>
+    <td align="center">0x09</td>
+    <td align="center">velocity+torque</td>
+  </tr>
+  <tr>
+    <td align="center">1010</td>
+    <td align="center">0x0A</td>
+    <td align="center">position+torque</td>
+  </tr>
+  <tr>
+    <td align="center">1011</td>
+    <td align="center">0x0B</td>
+    <td align="center">velocity+position+torque</td>
+  </tr>
+  <tr>
+    <td align="center">1100</td>
+    <td align="center">0x0C</td>
+    <td align="center">orientation+torque</td>
+  </tr>
+  <tr>
+    <td align="center">1101</td>
+    <td align="center">0x0D</td>
+    <td align="center">velocity+orientation+torque</td>
+  </tr>
+  <tr>
+    <td align="center">1110</td>
+    <td align="center">0x0E</td>
+    <td align="center">position+orientation+torque</td>
+  </tr>
+  <tr>
+    <td align="center">1111</td>
+    <td align="center">0x0F</td>
+    <td align="center">velocity+position+orientation+torque</td>
+  </tr>
+</table>
+
+
+### Bucket feedback switch
+Bucket feedback switch (s<sub>bkt</sub>) is a bit switch for bucket feedbacks. The first six bits from the MSB is not available (N.A.) in the current protocol, and the last two bits from the LSB corresponds to the bucket mode feedback and bucket dynamics feedback as shown in the table below. At each bit, 0 means the correspoding feedback is not required and won't be sent. In contrast, 1 means the corresponding feedback will be sent.
+<table>
+  <tr>
+    <th>Bit</th>
+    <th>MSB</th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>LSB</th>
+  </tr>
+  <tr>
+    <td align="center">Bucket feedback</td>
+    <td align="center">N.A.</td>
+    <td align="center">N.A.</td>
+    <td align="center">N.A.</td>
+    <td align="center">N.A.</td>
+    <td align="center">N.A.</td>
+    <td align="center">N.A.</td>
+    <td align="center">mode</td>
+    <td align="center">dyanmics</td>
+  </tr>
+</table>
+
+Lookup table for bucket feedback list:
+<table>
+  <tr>
+    <th>Bit</th>
+    <th>Hex</th>
+    <th>Bucket feedback</th>
+  </tr>
+  <tr>
+    <td align="center">00</td>
+    <td align="center">0x00</td>
+    <td align="center">No feedback</td>
+  </tr>
+  <tr>
+    <td align="center">01</td>
+    <td align="center">0x01</td>
+    <td align="center">mode</td>
+  </tr>
+  <tr>
+    <td align="center">10</td>
+    <td align="center">0x02</td>
+    <td align="center">dynamics</td>
+  </tr>
+  <tr>
+    <td align="center">11</td>
+    <td align="center">0x03</td>
+    <td align="center">mode+dynamics</td>
+  </tr>
+</table>
+
+### Utility feedback switch
+Utility feedback switch (s<sub>utl</sub>) is a byte switch to decide whether the utility feedback is required or not. When s<sub>utl</sub> = 0x00 means it is not required and won't be sent, while 0x01 means it will be sent.
+
+### Reset switch
+Reset switch (s<sub>rst</sub>) is a byte switch to decide whether the robot is going to be reset in this initialization. When s<sub>rst</sub> = 0x00 means it will not be reset, while 0x01 means it will be reset.
+
 
 # Sending Command Protocol
 A sending command header, 0xAA, is added to each of the messages. The detailed protocols are shown below.
@@ -490,203 +674,23 @@ This feedback contains the utility state from the robotic platform. Except for t
 - headlight switch: the mode can be changed by sending [command]().
 - emergency state: this is a physical button on the robot body, and cannot be triggered by the command.
 - remote state: can be triggered by using the remote controller, but cannot be triggered by the command. In this state: 0x00 for manual mode (none of the command will be run by the robot), 0x01 for auto mode (the robot is fully controlled by the computing device).
+- battery level: feedback the remaining battery level in percentage.
 
+# Dependencies:
+Please check [CMakeLists file](https://github.com/Murphy41/HRL-UGV-Research-Project/blob/main/src/communication_layer/ACCR_Comm/CMakeLists.txt)
 
+# How to use:
+This package is currently an excutable file. You can include the following line in your launch file to turn on the communication.
 
-
-# Parameters
-## Initialization parameters
-### Communication cycle
-Communication cycle (T) is the time cycle of each round of communication in ms.
-
-### Frequency division
-Frequency division, $k_f$ is the frequency division of the chassis info and other info. The chassis info communication frequency $f_{chas}$ is defined as $f_{chas} = \frac{1}{T}$. And the frequency of all other communications (currently including bucket and utilities) $f_{n-chas} = \frac{f_{chas}}{k_f}$.
-
-### Chassis feedback switch
-Chassis feedback switch (s<sub>chas</sub>) is a bit switch for chassis feedbacks. The first four bits from the MSB is not available (N.A.) in the current protocol, and the last four bits from the LSB corresponds to the chassis velocity feedback, chassis position feedback, chassis orientation feedback, and chassis torque feedback, as shown in the table below. At each bit, 0 means the correspoding feedback is not required and won't be sent. In contrast, 1 means the corresponding feedback will be sent.
-<table>
-  <tr>
-    <th>Bit</th>
-    <th>MSB</th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    <th>4</th>
-    <th>5</th>
-    <th>6</th>
-    <th>LSB</th>
-  </tr>
-  <tr>
-    <td align="center">Chassis feedback</td>
-    <td align="center">N.A.</td>
-    <td align="center">N.A.</td>
-    <td align="center">N.A.</td>
-    <td align="center">N.A.</td>
-    <td align="center">torque</td>
-    <td align="center">orientation</td>
-    <td align="center">position</td>
-    <td align="center">velocity</td>
-  </tr>
-</table>
-
-Lookup table for chassis feedback list:
-<table>
-  <tr>
-    <th>Bit</th>
-    <th>Hex</th>
-    <th>Chassis feedback</th>
-  </tr>
-  <tr>
-    <td align="center">0000</td>
-    <td align="center">0x00</td>
-    <td align="center">No feedback</td>
-  </tr>
-  <tr>
-    <td align="center">0001</td>
-    <td align="center">0x01</td>
-    <td align="center">velocity</td>
-  </tr>
-  <tr>
-    <td align="center">0010</td>
-    <td align="center">0x02</td>
-    <td align="center">position</td>
-  </tr>
-  <tr>
-    <td align="center">0011</td>
-    <td align="center">0x03</td>
-    <td align="center">velocity+position</td>
-  </tr>
-  <tr>
-    <td align="center">0100</td>
-    <td align="center">0x04</td>
-    <td align="center">orientation</td>
-  </tr>
-  <tr>
-    <td align="center">0101</td>
-    <td align="center">0x05</td>
-    <td align="center">velocity+orientation</td>
-  </tr>
-  <tr>
-    <td align="center">0110</td>
-    <td align="center">0x06</td>
-    <td align="center">position+orientation</td>
-  </tr>
-  <tr>
-    <td align="center">0111</td>
-    <td align="center">0x07</td>
-    <td align="center">velocity+position+orientation</td>
-  </tr>
-  <tr>
-    <td align="center">1000</td>
-    <td align="center">0x08</td>
-    <td align="center">torque</td>
-  </tr>
-  <tr>
-    <td align="center">1001</td>
-    <td align="center">0x09</td>
-    <td align="center">velocity+torque</td>
-  </tr>
-  <tr>
-    <td align="center">1010</td>
-    <td align="center">0x0A</td>
-    <td align="center">position+torque</td>
-  </tr>
-  <tr>
-    <td align="center">1011</td>
-    <td align="center">0x0B</td>
-    <td align="center">velocity+position+torque</td>
-  </tr>
-  <tr>
-    <td align="center">1100</td>
-    <td align="center">0x0C</td>
-    <td align="center">orientation+torque</td>
-  </tr>
-  <tr>
-    <td align="center">1101</td>
-    <td align="center">0x0D</td>
-    <td align="center">velocity+orientation+torque</td>
-  </tr>
-  <tr>
-    <td align="center">1110</td>
-    <td align="center">0x0E</td>
-    <td align="center">position+orientation+torque</td>
-  </tr>
-  <tr>
-    <td align="center">1111</td>
-    <td align="center">0x0F</td>
-    <td align="center">velocity+position+orientation+torque</td>
-  </tr>
-</table>
-
-
-### Bucket feedback switch
-Bucket feedback switch (s<sub>bkt</sub>) is a bit switch for bucket feedbacks. The first six bits from the MSB is not available (N.A.) in the current protocol, and the last two bits from the LSB corresponds to the bucket mode feedback and bucket dynamics feedback as shown in the table below. At each bit, 0 means the correspoding feedback is not required and won't be sent. In contrast, 1 means the corresponding feedback will be sent.
-<table>
-  <tr>
-    <th>Bit</th>
-    <th>MSB</th>
-    <th>1</th>
-    <th>2</th>
-    <th>3</th>
-    <th>4</th>
-    <th>5</th>
-    <th>6</th>
-    <th>LSB</th>
-  </tr>
-  <tr>
-    <td align="center">Bucket feedback</td>
-    <td align="center">N.A.</td>
-    <td align="center">N.A.</td>
-    <td align="center">N.A.</td>
-    <td align="center">N.A.</td>
-    <td align="center">N.A.</td>
-    <td align="center">N.A.</td>
-    <td align="center">mode</td>
-    <td align="center">dyanmics</td>
-  </tr>
-</table>
-
-Lookup table for bucket feedback list:
-<table>
-  <tr>
-    <th>Bit</th>
-    <th>Hex</th>
-    <th>Bucket feedback</th>
-  </tr>
-  <tr>
-    <td align="center">00</td>
-    <td align="center">0x00</td>
-    <td align="center">No feedback</td>
-  </tr>
-  <tr>
-    <td align="center">01</td>
-    <td align="center">0x01</td>
-    <td align="center">mode</td>
-  </tr>
-  <tr>
-    <td align="center">10</td>
-    <td align="center">0x02</td>
-    <td align="center">dynamics</td>
-  </tr>
-  <tr>
-    <td align="center">11</td>
-    <td align="center">0x03</td>
-    <td align="center">mode+dynamics</td>
-  </tr>
-</table>
-
-### Utility feedback switch
-Utility feedback switch (s<sub>utl</sub>) is a byte switch to decide whether the utility feedback is required or not. When s<sub>utl</sub> = 0x00 means it is not required and won't be sent, while 0x01 means it will be sent.
-
-### Reset switch
-Reset switch (s<sub>rst</sub>) is a byte switch to decide whether the robot is going to be reset in this initialization. When s<sub>rst</sub> = 0x00 means it will not be reset, while 0x01 means it will be reset.
-
+```xml
+  <node name="my_serial_node" pkg="my_serial_node" type="my_serial_node" />
+```
 
 # TODO:
 - update the link of ACCR UTGV documentation.
 
 To use: Include the following line in your launch file:
-  <node name="my_serial_node" pkg="my_serial_node" type="my_serial_node" />
+  <node name="accr_comm" pkg="accr_comm" type="accr_comm" />
 
 
 Details to be added.
