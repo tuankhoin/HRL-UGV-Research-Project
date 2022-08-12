@@ -73,7 +73,7 @@ typedef union{
 }uint16_union;
 
 typedef struct{
-	u16 ts = 0.02;
+	u16 ts = 20;
 	u8 freq_div = 50;
 	u8 chassis_op = 0x0f;
 	u8 bucket_op = 0x03;
